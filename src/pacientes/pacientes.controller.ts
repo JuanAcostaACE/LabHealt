@@ -2,16 +2,14 @@ import {
   Body,
   Controller,
   Delete,
-  BadRequestException,
   ForbiddenException,
   Get,
   NotFoundException,
   Param,
   Post,
   Put,
-  UnprocessableEntityException,
 } from '@nestjs/common';
-import { CreatePacienteDto, UpdatePacienteDto } from './paciente.dto';
+import { CreatePacienteDto, UpdatePacienteDto } from './paciente.dto.js';
 
 interface Paciente {
   id: string;
