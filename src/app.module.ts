@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { createObserveModule } from '@nestjs/observe';
 import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
+import { PacientesController } from './pacientes/pacientes.controller.js';
 
 export const { ObserveModule, ObserveInstrument } = createObserveModule();
 
@@ -15,7 +16,7 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
       serviceId: 'LabHealt',
     }),
   ],
-  controllers: [AppController],
+  controllers: [AppController, PacientesController],
   providers: [AppService],
 })
 export class AppModule {}
