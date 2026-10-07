@@ -1,20 +1,9 @@
-import {Body, Controller, Delete, ForbiddenException, Get, NotFoundException, Param, Post, Put} from '@nestjs/common';
+import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
+import { Paciente } from './paciente.model.js';
 import { CreatePacienteDto, UpdatePacienteDto } from './paciente.dto.js';
 
-interface Paciente {
-  id: string;
-  nombre: string;
-  documento: string;
-  telefono: string;
-  email: string;
-  fechaNacimiento: string;
-  tipoSangre: string;
-  antecedentesClinicos: string;
-  codigoPaciente?: string;
-}
-
-@Controller('pacientes')
-export class PacientesController {
+@Injectable()
+export class PacientesService {
   private pacientes: Paciente[] = [
     {
       id: '1',
@@ -48,16 +37,15 @@ export class PacientesController {
     }
   ];
 
-  @Get('')
-  getAllPacientes() {
+  findAll() {
     return this.pacientes;
   }
 
-  @Get(':id')
-  getPacienteById(@Param('id') id: string) {
+  findById(id: string) {
     console.log('.:: Paciente ID: ', id);
     const paciente = this.pacientes.find((paciente) => paciente.id === id);
     console.log('.:: paciente buscado: ', paciente);
+    
     if (paciente === undefined) {
       throw new NotFoundException(`Paciente con ID ${id} no existe`);
     }
@@ -70,8 +58,7 @@ export class PacientesController {
     return paciente;
   }
 
-  @Get('search/:nombre')
-  getPacienteByName(@Param('nombre') nombre: string) {
+  findByName(nombre: string) {
     const data = this.pacientes.find((paciente) => paciente.nombre === nombre);
     if (!data) {
       throw new NotFoundException(`Paciente con nombre ${nombre} no existe`);
@@ -79,8 +66,7 @@ export class PacientesController {
     return { result: data?.email };
   }
 
-  @Post()
-  createPaciente(@Body() pacientePayload: CreatePacienteDto) {
+  create(pacientePayload: CreatePacienteDto) {
     console.log('.:: paciente: ', pacientePayload);
 
     const newPaciente = {
@@ -96,8 +82,7 @@ export class PacientesController {
     };
   }
 
-  @Delete(':id')
-  deletePaciente(@Param('id') id: string) {
+  delete(id: string) {
     const position = this.pacientes.findIndex((paciente) => paciente.id === id);
     if (position === -1) {
       throw new NotFoundException(`Paciente con ID ${id} no existe`);
@@ -108,8 +93,7 @@ export class PacientesController {
     };
   }
 
-  @Put(':id')
-  updatePaciente(@Param('id') id: string, @Body() changes: UpdatePacienteDto) {
+  update(id: string, changes: UpdatePacienteDto) {
     const position = this.pacientes.findIndex((paciente) => paciente.id === id);
     if (position === -1) {
       throw new NotFoundException(`Paciente con ID ${id} no existe`);
