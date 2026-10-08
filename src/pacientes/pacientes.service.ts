@@ -50,7 +50,7 @@ export class PacientesService {
       throw new NotFoundException(`Paciente con ID ${id} no existe`);
     }
 
-    if (paciente.id === '1') {
+    if (paciente.id === '-1') {
       throw new ForbiddenException(
         `No tienes permisos para acceder al paciente con ID ${id}`,
       );

@@ -36,7 +36,7 @@ export class DoctoresService {
       throw new NotFoundException(`Doctor con ID ${id} no existe`);
     }
 
-    if (doctor.id === '1') {
+    if (doctor.id === '-1') {
       throw new ForbiddenException(
         `No tienes permisos para acceder al doctor con ID ${id}`,
       );

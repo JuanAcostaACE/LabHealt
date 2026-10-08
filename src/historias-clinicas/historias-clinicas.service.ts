@@ -38,7 +38,7 @@ export class HistoriasClinicasService {
       throw new NotFoundException(`Historia clínica con ID ${id} no existe`);
     }
 
-    if (historia.id === '1') {
+    if (historia.id === '-1') {
       throw new ForbiddenException(
         `No tienes permisos para acceder a la historia con ID ${id}`,
       );
