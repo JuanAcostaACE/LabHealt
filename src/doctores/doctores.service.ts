@@ -7,10 +7,10 @@ export class DoctoresService {
   private doctores: Doctor[] = [
     {
       id: '1',
-      nombre: 'Dr. Roberto',
+      nombre: 'Dr. Jordi',
       especialidad: 'Cardiología',
       licencia: 'MED12345',
-      email: 'roberto.cardio@hospital.com',
+      email: 'Jordi.cardio@hospital.com',
       telefono: '3009998877',
     },
     {
