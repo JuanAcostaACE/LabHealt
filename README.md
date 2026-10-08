@@ -49,3 +49,6 @@ npm run test:e2e
 # cobertura
 npm run test:cov
 ```
+## Diagrama
+
+<img width="1072" height="1113" alt="image" src="https://github.com/user-attachments/assets/7e36ec9e-12c8-4c60-a789-efa215f00ae8" />
