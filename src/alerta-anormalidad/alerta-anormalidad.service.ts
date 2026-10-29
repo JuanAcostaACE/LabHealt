@@ -1,67 +1,39 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Alerta, NivelAlerta } from './alerta.model.js';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Alerta } from './entities/alerta.entity.js';
 import { CreateAlertaDto, UpdateAlertaDto } from './alerta.dto.js';
 
 @Injectable()
 export class AlertaAnormalidadService {
-    private alertas: Alerta[] = [
-        {
-            id: '1',
-            resultado: 'Anormal',
-            mensaje: 'Resultado anormal detectado',
-            nivel: NivelAlerta.Alto,
-            codigoAlerta: 'ALERT-001'
-        },
-        {
-            id: '2',
-            resultado: 'Normal',
-            mensaje: 'Resultado dentro de los parámetros normales',
-            nivel: NivelAlerta.Bajo,
-            codigoAlerta: 'ALERT-002'
-        },
-    ];
+  constructor(
+    @InjectRepository(Alerta)
+    private repo: Repository<Alerta>,
+  ) {}
 
-    findAll() {
-        return this.alertas;
+  findAll() {
+    return this.repo.find();
+  }
+
+  async findById(id: number) {
+    const alerta = await this.repo.findOneBy({ id });
+    if (!alerta) {
+      throw new NotFoundException(`Alerta con ID ${id} no existe`);
     }
+    return alerta;
+  }
 
-    findById(id: string) {
-        const alerta = this.alertas.find((alerta) => alerta.id === id);
-        if (!alerta) {
-            throw new NotFoundException(`Alerta con ID ${id} no existe`);
-        }
-        return alerta;
-    }
+  create(alertaPayload: CreateAlertaDto) {
+    return this.repo.save(this.repo.create(alertaPayload));
+  }
 
-    create(alertaPayload: CreateAlertaDto) {
-        const newAlerta: Alerta = {
-            ...alertaPayload,
-            id: `${new Date().getTime()}`,
-        };
-        this.alertas.push(newAlerta);
-        return newAlerta;
-    }
+  async delete(id: number) {
+    const alerta = await this.findById(id);
+    return this.repo.remove(alerta);
+  }
 
-    delete(id: string) {
-        const index = this.alertas.findIndex((alerta) => alerta.id === id);
-        if (index === -1) {
-            throw new NotFoundException(`Alerta con ID ${id} no existe`);
-        }
-        const deletedAlerta = this.alertas.splice(index, 1)[0];
-        return deletedAlerta;
-    }
-
-    update(id: string, alertaPayload: UpdateAlertaDto) {
-        const index = this.alertas.findIndex((alerta) => alerta.id === id);
-        if (index === -1) {
-            throw new NotFoundException(`Alerta con ID ${id} no existe`);
-        }
-        const updatedAlerta: Alerta = {
-            ...this.alertas[index],
-            ...alertaPayload,
-        };
-        this.alertas[index] = updatedAlerta;
-        return updatedAlerta;
-    }
-
+  async update(id: number, alertaPayload: UpdateAlertaDto) {
+    const alerta = await this.findById(id);
+    return this.repo.save(Object.assign(alerta, alertaPayload));
+  }
 }

@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
 import { AlertaAnormalidadService } from './alerta-anormalidad.service.js';
 import { CreateAlertaDto, UpdateAlertaDto } from './alerta.dto.js';
 
@@ -12,7 +12,7 @@ export class AlertaAnormalidadController {
   }
 
   @Get(':id')
-  getAlertaById(@Param('id') id: string) {
+  getAlertaById(@Param('id', ParseIntPipe) id: number) {
     return this.alertaService.findById(id);
   }
 
@@ -22,12 +22,12 @@ export class AlertaAnormalidadController {
   }
 
   @Delete(':id')
-  deleteAlerta(@Param('id') id: string) {
+  deleteAlerta(@Param('id', ParseIntPipe) id: number) {
     return this.alertaService.delete(id);
   }
 
   @Put(':id')
-  updateAlerta(@Param('id') id: string, @Body() changes: UpdateAlertaDto) {
+  updateAlerta(@Param('id', ParseIntPipe) id: number, @Body() changes: UpdateAlertaDto) {
     return this.alertaService.update(id, changes);
   }
 }

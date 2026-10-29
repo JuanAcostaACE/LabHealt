@@ -1,99 +1,62 @@
-import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
-import { Doctor } from './doctor.model.js';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Doctor } from './entities/doctor.entity.js';
 import { CreateDoctorDto, UpdateDoctorDto } from './doctor.dto.js';
 
 @Injectable()
 export class DoctoresService {
-  private doctores: Doctor[] = [
-    {
-      id: '1',
-      nombre: 'Dr. Jordi',
-      especialidad: 'Cardiología',
-      licencia: 'MED12345',
-      email: 'Jordi.cardio@hospital.com',
-      telefono: '3009998877',
-    },
-    {
-      id: '2',
-      nombre: 'Dra. Elena',
-      especialidad: 'Pediatría',
-      licencia: 'MED67890',
-      email: 'elena.pediatra@hospital.com',
-      telefono: '3105554433',
-    }
-  ];
+  constructor(
+    @InjectRepository(Doctor)
+    private repo: Repository<Doctor>,
+  ) {}
 
   findAll() {
-    return this.doctores;
+    return this.repo.find();
   }
 
-  findById(id: string) {
-    console.log('.:: Doctor ID: ', id);
-    const doctor = this.doctores.find((doc) => doc.id === id);
-    console.log('.:: doctor buscado: ', doctor);
-    
-    if (doctor === undefined) {
+  async findById(id: number) {
+    const entity = await this.repo.findOneBy({ id });
+    if (!entity) {
       throw new NotFoundException(`Doctor con ID ${id} no existe`);
     }
-
-    if (doctor.id === '-1') {
-      throw new ForbiddenException(
-        `No tienes permisos para acceder al doctor con ID ${id}`,
-      );
-    }
-    return doctor;
+    return entity;
   }
 
-  findByName(nombre: string) {
-    const data = this.doctores.find((doc) => doc.nombre === nombre);
+  async findByName(nombre: string) {
+    const data = await this.repo.findOneBy({ nombre });
     if (!data) {
       throw new NotFoundException(`Doctor con nombre ${nombre} no existe`);
     }
-    return { result: data?.email };
+    return { result: data.email };
   }
 
-  create(doctorPayload: CreateDoctorDto) {
-    console.log('.:: doctor: ', doctorPayload);
-
-    const newDoctor = {
-      ...doctorPayload,
-      id: `${new Date().getTime()}`,
-      codigoDoctor: doctorPayload.nombre.substring(0, 3) + '123'
-    };
-    this.doctores.push(newDoctor);
-
+  async create(payload: CreateDoctorDto) {
+    const saved = await this.repo.save(
+      this.repo.create({ ...payload, codigoDoctor: payload.nombre.substring(0, 3) + '123' }),
+    );
     return {
       message: 'Doctor creado correctamente',
-      data: doctorPayload,
+      data: saved,
     };
   }
 
-  delete(id: string) {
-    const position = this.doctores.findIndex((doc) => doc.id === id);
-    if (position === -1) {
+  async delete(id: number) {
+    const { affected } = await this.repo.delete(id);
+    if (!affected) {
       throw new NotFoundException(`Doctor con ID ${id} no existe`);
     }
-    this.doctores.splice(position, 1);
     return {
       msg: 'Doctor eliminado correctamente',
     };
   }
 
-  update(id: string, changes: UpdateDoctorDto) {
-    const position = this.doctores.findIndex((doc) => doc.id === id);
-    if (position === -1) {
-      throw new NotFoundException(`Doctor con ID ${id} no existe`);
-    }
-    const currentData = this.doctores[position];
-    const updateDoctor = {
-      ...currentData,
-      ...changes,
-    };
-    this.doctores[position] = updateDoctor;
-
+  async update(id: number, changes: UpdateDoctorDto) {
+    const current = await this.findById(id);
+    const updated = await this.repo.save(Object.assign(current, changes));
     return {
       msg: 'Doctor actualizado',
-      data: updateDoctor,
+      data: updated,
     };
   }
 }

@@ -1,101 +1,82 @@
-import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
-import { HistoriaClinica } from './historia-clinica.model.js';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { HistoriaClinica } from './entities/historia-clinica.entity.js';
+import { Paciente } from '../pacientes/entities/paciente.entity.js';
+import { Doctor } from '../doctores/entities/doctor.entity.js';
 import { CreateHistoriaClinicaDto, UpdateHistoriaClinicaDto } from './historia-clinica.dto.js';
 
 @Injectable()
 export class HistoriasClinicasService {
-  private historias: HistoriaClinica[] = [
-    {
-      id: '1',
-      pacienteId: '1085000111',
-      doctorId: 'MED12345',
-      fecha: '2026-10-06',
-      diagnostico: 'Gripe severa',
-      tratamiento: 'Reposo y acetaminofén',
-      observaciones: 'Paciente presenta fiebre alta',
-    },
-    {
-      id: '2',
-      pacienteId: '1085000222',
-      doctorId: 'MED67890',
-      fecha: '2026-10-05',
-      diagnostico: 'Migraña crónica',
-      tratamiento: 'Ibuprofeno 800mg',
-      observaciones: 'Sensibilidad a la luz',
-    }
-  ];
+  constructor(
+    @InjectRepository(HistoriaClinica)
+    private repo: Repository<HistoriaClinica>,
+    @InjectRepository(Paciente)
+    private pacientes: Repository<Paciente>,
+    @InjectRepository(Doctor)
+    private doctores: Repository<Doctor>,
+  ) {}
 
-  findAll() {
-    return this.historias;
+  private async assertRelations(pacienteId: number, doctorId: number) {
+    if (!(await this.pacientes.existsBy({ id: pacienteId }))) {
+      throw new BadRequestException(`Paciente con ID ${pacienteId} no existe`);
+    }
+    if (!(await this.doctores.existsBy({ id: doctorId }))) {
+      throw new BadRequestException(`Doctor con ID ${doctorId} no existe`);
+    }
   }
 
-  findById(id: string) {
-    console.log('.:: Historia ID: ', id);
-    const historia = this.historias.find((h) => h.id === id);
-    console.log('.:: historia buscada: ', historia);
-    
-    if (historia === undefined) {
-      throw new NotFoundException(`Historia clínica con ID ${id} no existe`);
-    }
+  findAll() {
+    return this.repo.find();
+  }
 
-    if (historia.id === '-1') {
-      throw new ForbiddenException(
-        `No tienes permisos para acceder a la historia con ID ${id}`,
-      );
+  async findById(id: number) {
+    const historia = await this.repo.findOneBy({ id });
+    if (!historia) {
+      throw new NotFoundException(`Historia clínica con ID ${id} no existe`);
     }
     return historia;
   }
 
-  findByDiagnostico(diagnostico: string) {
-    const data = this.historias.find((h) => h.diagnostico === diagnostico);
+  async findByDiagnostico(diagnostico: string) {
+    const data = await this.repo.findOneBy({ diagnostico });
     if (!data) {
       throw new NotFoundException(`Historia clínica con diagnóstico ${diagnostico} no existe`);
     }
-    return { result: data?.tratamiento };
+    return { result: data.tratamiento };
   }
 
-  create(historiaPayload: CreateHistoriaClinicaDto) {
-    console.log('.:: historia: ', historiaPayload);
-
-    const newHistoria = {
-      ...historiaPayload,
-      id: `${new Date().getTime()}`,
-      codigoHistoria: historiaPayload.diagnostico.substring(0, 3) + '123'
-    };
-    this.historias.push(newHistoria);
-
+  async create(historiaPayload: CreateHistoriaClinicaDto) {
+    await this.assertRelations(historiaPayload.pacienteId, historiaPayload.doctorId);
+    const saved = await this.repo.save(
+      this.repo.create({
+        ...historiaPayload,
+        codigoHistoria: historiaPayload.diagnostico.substring(0, 3) + '123',
+      }),
+    );
     return {
       message: 'Historia clínica creada correctamente',
-      data: historiaPayload,
+      data: saved,
     };
   }
 
-  delete(id: string) {
-    const position = this.historias.findIndex((h) => h.id === id);
-    if (position === -1) {
+  async delete(id: number) {
+    const { affected } = await this.repo.delete(id);
+    if (!affected) {
       throw new NotFoundException(`Historia clínica con ID ${id} no existe`);
     }
-    this.historias.splice(position, 1);
     return {
       msg: 'Historia clínica eliminada correctamente',
     };
   }
 
-  update(id: string, changes: UpdateHistoriaClinicaDto) {
-    const position = this.historias.findIndex((h) => h.id === id);
-    if (position === -1) {
-      throw new NotFoundException(`Historia clínica con ID ${id} no existe`);
-    }
-    const currentData = this.historias[position];
-    const updateHistoria = {
-      ...currentData,
-      ...changes,
-    };
-    this.historias[position] = updateHistoria;
-
+  async update(id: number, changes: UpdateHistoriaClinicaDto) {
+    const current = await this.findById(id);
+    await this.assertRelations(changes.pacienteId, changes.doctorId);
+    const updated = await this.repo.save(Object.assign(current, changes));
     return {
       msg: 'Historia clínica actualizada',
-      data: updateHistoria,
+      data: updated,
     };
   }
 }

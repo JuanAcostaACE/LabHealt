@@ -1,113 +1,62 @@
-import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
-import { Paciente } from './paciente.model.js';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Paciente } from './entities/paciente.entity.js';
 import { CreatePacienteDto, UpdatePacienteDto } from './paciente.dto.js';
 
 @Injectable()
 export class PacientesService {
-  private pacientes: Paciente[] = [
-    {
-      id: '1',
-      nombre: 'Juanita',
-      documento: '1085000111',
-      telefono: '3001112233',
-      email: 'juanita@correo.com',
-      fechaNacimiento: '1995-05-12',
-      tipoSangre: 'O+',
-      antecedentesClinicos: 'Ninguno'
-    },
-    {
-      id: '2',
-      nombre: 'Carlos',
-      documento: '1085000222',
-      telefono: '3102223344',
-      email: 'carlos@correo.com',
-      fechaNacimiento: '1988-11-23',
-      tipoSangre: 'A-',
-      antecedentesClinicos: 'Hipertensión'
-    },
-    {
-      id: '3',
-      nombre: 'Ana',
-      documento: '1085000333',
-      telefono: '3123334455',
-      email: 'ana.gomez@correo.com',
-      fechaNacimiento: '2001-02-15',
-      tipoSangre: 'B+',
-      antecedentesClinicos: 'Alergia a la penicilina'
-    }
-  ];
+  constructor(
+    @InjectRepository(Paciente)
+    private repo: Repository<Paciente>,
+  ) {}
 
   findAll() {
-    return this.pacientes;
+    return this.repo.find();
   }
 
-  findById(id: string) {
-    console.log('.:: Paciente ID: ', id);
-    const paciente = this.pacientes.find((paciente) => paciente.id === id);
-    console.log('.:: paciente buscado: ', paciente);
-    
-    if (paciente === undefined) {
+  async findById(id: number) {
+    const entity = await this.repo.findOneBy({ id });
+    if (!entity) {
       throw new NotFoundException(`Paciente con ID ${id} no existe`);
     }
-
-    if (paciente.id === '-1') {
-      throw new ForbiddenException(
-        `No tienes permisos para acceder al paciente con ID ${id}`,
-      );
-    }
-    return paciente;
+    return entity;
   }
 
-  findByName(nombre: string) {
-    const data = this.pacientes.find((paciente) => paciente.nombre === nombre);
+  async findByName(nombre: string) {
+    const data = await this.repo.findOneBy({ nombre });
     if (!data) {
       throw new NotFoundException(`Paciente con nombre ${nombre} no existe`);
     }
-    return { result: data?.email };
+    return { result: data.email };
   }
 
-  create(pacientePayload: CreatePacienteDto) {
-    console.log('.:: paciente: ', pacientePayload);
-
-    const newPaciente = {
-      ...pacientePayload,
-      id: `${new Date().getTime()}`,
-      codigoPaciente: pacientePayload.nombre.substring(0, 3) + '123'
-    };
-    this.pacientes.push(newPaciente);
-
+  async create(payload: CreatePacienteDto) {
+    const saved = await this.repo.save(
+      this.repo.create({ ...payload, codigoPaciente: payload.nombre.substring(0, 3) + '123' }),
+    );
     return {
       message: 'Paciente creado correctamente',
-      data: pacientePayload,
+      data: saved,
     };
   }
 
-  delete(id: string) {
-    const position = this.pacientes.findIndex((paciente) => paciente.id === id);
-    if (position === -1) {
+  async delete(id: number) {
+    const { affected } = await this.repo.delete(id);
+    if (!affected) {
       throw new NotFoundException(`Paciente con ID ${id} no existe`);
     }
-    this.pacientes.splice(position, 1);
     return {
       msg: 'Paciente eliminado correctamente',
     };
   }
 
-  update(id: string, changes: UpdatePacienteDto) {
-    const position = this.pacientes.findIndex((paciente) => paciente.id === id);
-    if (position === -1) {
-      throw new NotFoundException(`Paciente con ID ${id} no existe`);
-    }
-    const currentData = this.pacientes[position];
-    const updatePaciente = {
-      ...currentData,
-      ...changes,
-    };
-    this.pacientes[position] = updatePaciente;
-
+  async update(id: number, changes: UpdatePacienteDto) {
+    const current = await this.findById(id);
+    const updated = await this.repo.save(Object.assign(current, changes));
     return {
       msg: 'Paciente actualizado',
-      data: updatePaciente,
+      data: updated,
     };
   }
 }

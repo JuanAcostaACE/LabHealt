@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put } from '@nestjs/common';
 import { DoctoresService } from './doctores.service.js';
 import { CreateDoctorDto, UpdateDoctorDto } from './doctor.dto.js';
 
@@ -12,7 +12,7 @@ export class DoctoresController {
   }
 
   @Get(':id')
-  getDoctorById(@Param('id') id: string) {
+  getDoctorById(@Param('id', ParseIntPipe) id: number) {
     return this.doctoresService.findById(id);
   }
 
@@ -27,12 +27,12 @@ export class DoctoresController {
   }
 
   @Delete(':id')
-  deleteDoctor(@Param('id') id: string) {
+  deleteDoctor(@Param('id', ParseIntPipe) id: number) {
     return this.doctoresService.delete(id);
   }
 
   @Put(':id')
-  updateDoctor(@Param('id') id: string, @Body() changes: UpdateDoctorDto) {
+  updateDoctor(@Param('id', ParseIntPipe) id: number, @Body() changes: UpdateDoctorDto) {
     return this.doctoresService.update(id, changes);
   }
 }
