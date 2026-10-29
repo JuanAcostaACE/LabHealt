@@ -52,3 +52,14 @@ npm run test:cov
 ## Diagrama
 
 <img width="1072" height="1113" alt="image" src="https://github.com/user-attachments/assets/7e36ec9e-12c8-4c60-a789-efa215f00ae8" />
+
+## Docker
+
+```bash
+cp .env-example .env   # opcional, hay valores por defecto
+docker compose up --build
+```
+
+- API: http://localhost:3000
+- pgAdmin: http://localhost:5050
+- PostgreSQL: localhost:5432
