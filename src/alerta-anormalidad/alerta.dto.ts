@@ -1,5 +1,5 @@
 import { IsEnum, IsNotEmpty, IsString, Length } from "class-validator";
-import { NivelAlerta } from './alerta.model.js';
+import { NivelAlerta } from './entities/alerta.entity.js';
 
 export class CreateAlertaDto {
   @IsString()
