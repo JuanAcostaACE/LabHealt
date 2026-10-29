@@ -1,4 +1,6 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { createObserveModule } from '@nestjs/observe';
 import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
@@ -17,6 +19,21 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
       appKey: 'YOUR_APP_KEY',
       appSecret: 'YOUR_APP_SECRET',
       serviceId: 'LabHealt',
+    }),
+    ConfigModule.forRoot({ isGlobal: true }),
+    TypeOrmModule.forRootAsync({
+      useFactory: (config: ConfigService) => ({
+        type: 'postgres',
+        host: config.getOrThrow('POSTGRES_HOST'),
+        port: Number(config.getOrThrow('POSTGRES_PORT')),
+        username: config.getOrThrow('POSTGRES_USER'),
+        password: config.getOrThrow('POSTGRES_PASSWORD'),
+        database: config.getOrThrow('POSTGRES_DB'),
+        // shortcut: synchronize auto-alters the schema, switch to migrations before production.
+        synchronize: true,
+        autoLoadEntities: true,
+      }),
+      inject: [ConfigService],
     }),
     PacientesModule,
     DoctoresModule,
