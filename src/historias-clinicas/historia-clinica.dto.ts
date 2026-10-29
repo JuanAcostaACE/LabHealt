@@ -1,15 +1,15 @@
-import { IsNotEmpty, IsString, Length } from "class-validator";
+import { IsDateString, IsInt, IsNotEmpty, IsString, Length } from "class-validator";
 
 export class CreateHistoriaClinicaDto {
-  @IsString()
+  @IsInt()
   @IsNotEmpty()
-  pacienteId: string;
+  pacienteId: number;
 
-  @IsString()
+  @IsInt()
   @IsNotEmpty()
-  doctorId: string;
+  doctorId: number;
 
-  @IsString()
+  @IsDateString()
   @IsNotEmpty()
   fecha: string;
 
@@ -27,15 +27,15 @@ export class CreateHistoriaClinicaDto {
 }
 
 export class UpdateHistoriaClinicaDto {
-  @IsString()
+  @IsInt()
   @IsNotEmpty()
-  pacienteId: string;
+  pacienteId: number;
 
-  @IsString()
+  @IsInt()
   @IsNotEmpty()
-  doctorId: string;
+  doctorId: number;
 
-  @IsString()
+  @IsDateString()
   @IsNotEmpty()
   fecha: string;
 
