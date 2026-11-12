@@ -17,8 +17,8 @@ export class PacientesController {
   }
 
   @Get(':id/historias')
-  getHistoriasByPacienteId(@Param('id', ParseIntPipe) id: number) {
-    return this.pacientesService.findHistoriasById(id);
+  getPatientHistories(@Param('id', ParseIntPipe) id: number) {
+    return this.pacientesService.findHistoriesById(id);
   }
 
   @Get('search/:nombre')
