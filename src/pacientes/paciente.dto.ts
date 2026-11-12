@@ -1,4 +1,5 @@
-import { IsDateString, IsEmail, IsNotEmpty, IsString, Length } from "class-validator";
+import { PartialType } from "@nestjs/mapped-types";
+import { IsDateString, IsEmail, IsNotEmpty, IsOptional, IsString, Length } from "class-validator";
 
 export class CreatePacienteDto {
   @IsString()
@@ -30,37 +31,9 @@ export class CreatePacienteDto {
   antecedentesClinicos: string;
 }
 
-export class UpdatePacienteDto {
+export class UpdatePacienteDto extends PartialType(CreatePacienteDto) {
   @IsString()
-  @IsNotEmpty()
-  nombre: string;
-
-  @IsString()
-  @IsNotEmpty()
-  documento: string;
-
-  @IsString()
-  @IsNotEmpty()
-  telefono: string;
-
-  @IsEmail()
-  @IsNotEmpty()
-  email: string;
-
-  @IsDateString()
-  @IsNotEmpty()
-  fechaNacimiento: string;
-
-  @IsString()
-  @IsNotEmpty()
-  tipoSangre: string;
-
-  @IsString()
-  @IsNotEmpty()
-  antecedentesClinicos: string;
-
-  @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   @Length(3, 8)
   codigoPaciente?: string;
 }
