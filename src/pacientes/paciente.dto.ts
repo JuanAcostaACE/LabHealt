@@ -1,14 +1,19 @@
 import { PartialType } from "@nestjs/mapped-types";
-import { IsDateString, IsEmail, IsNotEmpty, IsNumberString, IsOptional, IsString, Length, MaxLength } from "class-validator";
+import { IsDateString, IsEmail, IsIn, IsNotEmpty, IsNumberString, IsOptional, IsString, Length, Matches, MaxLength, MinLength } from "class-validator";
+import { NoFutura } from "../common/no-futura.validator.js";
+
+export const TIPOS_DE_SANGRE = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'] as const;
 
 export class CreatePacienteDto {
   @IsString()
+  @Matches(/^[\p{L}\p{M} '.-]+$/u, { message: 'nombre solo puede tener letras, espacios, apóstrofos, puntos y guiones' })
+  @MinLength(3)
   @MaxLength(255)
   @IsNotEmpty()
   nombre: string;
 
-  @IsString()
-  @MaxLength(50)
+  @IsNumberString({ no_symbols: true }, { message: 'documento debe contener solo números' })
+  @Length(5, 20, { message: 'documento debe tener entre 5 y 20 dígitos' })
   @IsNotEmpty()
   documento: string;
 
@@ -23,15 +28,16 @@ export class CreatePacienteDto {
   email: string;
 
   @IsDateString()
+  @NoFutura({ message: 'fechaNacimiento no puede ser una fecha futura' })
   @IsNotEmpty()
   fechaNacimiento: string;
 
-  @IsString()
-  @MaxLength(5)
+  @IsIn(TIPOS_DE_SANGRE, { message: `tipoSangre debe ser uno de: ${TIPOS_DE_SANGRE.join(', ')}` })
   @IsNotEmpty()
   tipoSangre: string;
 
   @IsString()
+  @MinLength(3)
   @MaxLength(1000)
   @IsNotEmpty()
   antecedentesClinicos: string;
