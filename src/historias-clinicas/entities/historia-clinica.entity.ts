@@ -10,7 +10,7 @@ export class HistoriaClinica {
   @Column({ type: 'int', name: 'paciente_id' })
   pacienteId: number;
 
-  @ManyToOne(() => Paciente, { onDelete: 'RESTRICT' })
+  @ManyToOne(() => Paciente, (paciente) => paciente.historias, { onDelete: 'RESTRICT' })
   @JoinColumn({ name: 'paciente_id' })
   paciente: Paciente;
 
