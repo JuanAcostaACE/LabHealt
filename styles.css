@@ -1,0 +1,13 @@
+/* Unico ajuste sobre Bootstrap: botones en azul suave */
+.btn-primary {
+    --bs-btn-color: #111;
+    --bs-btn-bg: #8fb5e3;
+    --bs-btn-border-color: #8fb5e3;
+    --bs-btn-hover-color: #111;
+    --bs-btn-hover-bg: #7aa6dc;
+    --bs-btn-hover-border-color: #7aa6dc;
+    --bs-btn-active-color: #111;
+    --bs-btn-active-bg: #6a99d4;
+    --bs-btn-active-border-color: #6a99d4;
+}
+.badge-normal { background-color: #8fb5e3; color: #111; }
