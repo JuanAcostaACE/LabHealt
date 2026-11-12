@@ -1,14 +1,16 @@
-import { IsEnum, IsInt, IsNotEmpty, IsOptional, IsString, Length, MaxLength } from "class-validator";
+import { IsEnum, IsInt, IsNotEmpty, IsOptional, IsPositive, IsString, Length, MaxLength, MinLength } from "class-validator";
 import { NivelAlerta } from './entities/alerta.entity.js';
 import { PartialType } from '@nestjs/mapped-types';
 
 export class CreateAlertaDto {
   @IsString()
+  @MinLength(3)
   @MaxLength(255)
   @IsNotEmpty()
   resultado: string;
 
   @IsString()
+  @MinLength(3)
   @MaxLength(500)
   @IsNotEmpty()
   mensaje: string;
@@ -18,6 +20,7 @@ export class CreateAlertaDto {
   nivel: NivelAlerta;
 
   @IsInt()
+  @IsPositive()
   @IsNotEmpty()
   historiaId: number;
 }
