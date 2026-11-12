@@ -1,12 +1,14 @@
 import { PartialType } from "@nestjs/mapped-types";
-import { IsDateString, IsEmail, IsNotEmpty, IsNumberString, IsOptional, IsString, Length } from "class-validator";
+import { IsDateString, IsEmail, IsNotEmpty, IsNumberString, IsOptional, IsString, Length, MaxLength } from "class-validator";
 
 export class CreatePacienteDto {
   @IsString()
+  @MaxLength(255)
   @IsNotEmpty()
   nombre: string;
 
   @IsString()
+  @MaxLength(50)
   @IsNotEmpty()
   documento: string;
 
@@ -16,6 +18,7 @@ export class CreatePacienteDto {
   telefono: string;
 
   @IsEmail()
+  @MaxLength(255)
   @IsNotEmpty()
   email: string;
 
@@ -24,10 +27,12 @@ export class CreatePacienteDto {
   fechaNacimiento: string;
 
   @IsString()
+  @MaxLength(5)
   @IsNotEmpty()
   tipoSangre: string;
 
   @IsString()
+  @MaxLength(1000)
   @IsNotEmpty()
   antecedentesClinicos: string;
 }
