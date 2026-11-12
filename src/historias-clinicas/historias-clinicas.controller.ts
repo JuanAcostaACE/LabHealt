@@ -16,6 +16,11 @@ export class HistoriasClinicasController {
     return this.historiasService.findById(id);
   }
 
+  @Get(':id/alertas')
+  getHistoriaAlerts(@Param('id', ParseIntPipe) id: number) {
+    return this.historiasService.findAlertsById(id);
+  }
+
   @Get('search/:diagnostico')
   getHistoriaByDiagnostico(@Param('diagnostico') diagnostico: string) {
     return this.historiasService.findByDiagnostico(diagnostico);

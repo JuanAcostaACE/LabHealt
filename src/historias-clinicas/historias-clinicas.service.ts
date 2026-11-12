@@ -44,6 +44,17 @@ export class HistoriasClinicasService {
     return historia;
   }
 
+  async findAlertsById(id: number) {
+    const historia = await this.repo.findOne({
+      where: { id },
+      relations: { alerts: true },
+    });
+    if (!historia) {
+      throw new NotFoundException(`Historia clínica con ID ${id} no existe`);
+    }
+    return historia.alerts;
+  }
+
   async findByDiagnostico(diagnostico: string) {
     const data = await this.repo.findOneBy({ diagnostico });
     if (!data) {
