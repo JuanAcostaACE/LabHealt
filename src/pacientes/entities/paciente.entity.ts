@@ -37,5 +37,5 @@ export class Paciente {
   updatedAt: Date;
 
   @OneToMany(() => HistoriaClinica, (historia) => historia.paciente)
-  historias: HistoriaClinica[];
+  histories: HistoriaClinica[];
 }

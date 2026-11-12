@@ -23,17 +23,17 @@ export class PacientesService {
     return entity;
   }
 
-  async findHistoriasById(id: number) {
+  async findHistoriesById(id: number) {
     const paciente = await this.repo.findOne({
       where: { id },
-      relations: { historias: true },
+      relations: { histories: true },
     });
     if (!paciente) {
       throw new NotFoundException(`Paciente con ID ${id} no existe`);
     }
     return {
-      data: paciente.historias,
-      count: paciente.historias.length,
+      data: paciente.histories,
+      count: paciente.histories.length,
     };
   }
 

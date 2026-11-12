@@ -20,20 +20,20 @@ describe('PacientesService', () => {
     expect(service).toBeDefined();
   });
 
-  describe('findHistoriasById', () => {
-    it('devuelve las historias del paciente con su conteo', async () => {
-      repo.findOne.mockResolvedValue({ id: 1, historias: [{ id: 10 }, { id: 11 }] });
+  describe('findHistoriesById', () => {
+    it('should return the patient histories with their count', async () => {
+      repo.findOne.mockResolvedValue({ id: 1, histories: [{ id: 10 }, { id: 11 }] });
 
-      await expect(service.findHistoriasById(1)).resolves.toEqual({
+      await expect(service.findHistoriesById(1)).resolves.toEqual({
         data: [{ id: 10 }, { id: 11 }],
         count: 2,
       });
     });
 
-    it('lanza NotFoundException si el paciente no existe', async () => {
+    it('should throw NotFoundException when the patient does not exist', async () => {
       repo.findOne.mockResolvedValue(null);
 
-      await expect(service.findHistoriasById(99)).rejects.toThrow(NotFoundException);
+      await expect(service.findHistoriesById(99)).rejects.toThrow(NotFoundException);
     });
   });
 });
