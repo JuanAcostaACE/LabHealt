@@ -155,9 +155,133 @@ npm run test:cov
 
 También está la colección de Postman (`LabHealt.postman_collection.json`) en la raíz.
 
-## Diagrama
+## Diagrama de entidades
 
-<img width="1072" height="1113" alt="image" src="https://github.com/user-attachments/assets/7e36ec9e-12c8-4c60-a789-efa215f00ae8" />
+```mermaid
+classDiagram
+  class Paciente {
+    +number id
+    +string nombre
+    +string documento
+    +string telefono
+    +string email
+    +string fechaNacimiento
+    +string tipoSangre
+    +string antecedentesClinicos
+    +string codigoPaciente
+    +Date createdAt
+    +Date updatedAt
+  }
+
+  class Doctor {
+    +number id
+    +string nombre
+    +string especialidad
+    +string licencia
+    +string email
+    +string telefono
+    +string codigoDoctor
+    +Date createdAt
+    +Date updatedAt
+  }
+
+  class HistoriaClinica {
+    +number id
+    +number pacienteId
+    +number doctorId
+    +string fecha
+    +string diagnostico
+    +string tratamiento
+    +string observaciones
+    +string codigoHistoria
+    +Date createdAt
+    +Date updatedAt
+  }
+
+  class Alerta {
+    +number id
+    +string resultado
+    +string mensaje
+    +NivelAlerta nivel
+    +string codigoAlerta
+    +number historiaId
+    +Date createdAt
+    +Date updatedAt
+  }
+
+  class NivelAlerta {
+    <<enumeration>>
+    Bajo
+    Medio
+    Alto
+  }
+
+  Paciente "1" --> "0..*" HistoriaClinica : histories
+  Doctor "1" --> "0..*" HistoriaClinica : histories
+  HistoriaClinica "1" --> "0..*" Alerta : alerts
+  Alerta ..> NivelAlerta
+```
+
+## Diagrama de la base de datos
+
+```mermaid
+erDiagram
+  pacientes {
+    serial id PK
+    varchar nombre
+    varchar documento UK
+    varchar telefono
+    varchar email
+    date fecha_nacimiento
+    varchar tipo_sangre
+    text antecedentes_clinicos
+    varchar codigo_paciente "nullable"
+    timestamp created_at
+    timestamp updated_at
+  }
+
+  doctores {
+    serial id PK
+    varchar nombre
+    varchar especialidad
+    varchar licencia UK
+    varchar email
+    varchar telefono
+    varchar codigo_doctor "nullable"
+    timestamp created_at
+    timestamp updated_at
+  }
+
+  historias_clinicas {
+    serial id PK
+    int paciente_id FK
+    int doctor_id FK
+    date fecha
+    text diagnostico
+    text tratamiento
+    text observaciones
+    varchar codigo_historia "nullable"
+    timestamp created_at
+    timestamp updated_at
+  }
+
+  alertas {
+    serial id PK
+    varchar resultado
+    text mensaje
+    enum nivel "Bajo | Medio | Alto"
+    varchar codigo_alerta "nullable"
+    int historia_id FK
+    timestamp created_at
+    timestamp updated_at
+  }
+
+  pacientes ||--o{ historias_clinicas : "paciente_id (ON DELETE RESTRICT)"
+  doctores ||--o{ historias_clinicas : "doctor_id (ON DELETE RESTRICT)"
+  historias_clinicas ||--o{ alertas : "historia_id (ON DELETE CASCADE)"
+```
+
+El esquema lo crea TypeORM con `synchronize`, a partir de las entidades de `src/`.
 
 ## Docker
 
