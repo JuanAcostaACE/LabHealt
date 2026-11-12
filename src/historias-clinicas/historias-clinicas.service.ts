@@ -27,14 +27,20 @@ export class HistoriasClinicasService {
   }
 
   findAll() {
-    return this.repo.find();
+    return this.repo.find({
+      relations: { paciente: true, doctor: true },
+    });
   }
 
   async findById(id: number) {
-    const historia = await this.repo.findOneBy({ id });
+    const historia = await this.repo.findOne({
+      where: { id },
+      relations: { paciente: true, doctor: true}
+    })
     if (!historia) {
       throw new NotFoundException(`Historia clínica con ID ${id} no existe`);
     }
+
     return historia;
   }
 
@@ -72,7 +78,7 @@ export class HistoriasClinicasService {
 
   async update(id: number, changes: UpdateHistoriaClinicaDto) {
     const current = await this.findById(id);
-    await this.assertRelations(changes.pacienteId, changes.doctorId);
+    await this.assertRelations(changes.pacienteId ?? current.pacienteId, changes.doctorId ?? current.doctorId);
     const updated = await this.repo.save(Object.assign(current, changes));
     return {
       msg: 'Historia clínica actualizada',
