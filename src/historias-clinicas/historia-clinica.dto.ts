@@ -1,4 +1,4 @@
-import { IsDateString, IsInt, IsNotEmpty, IsOptional, IsString } from "class-validator";
+import { IsDateString, IsInt, IsNotEmpty, IsOptional, IsString, MaxLength } from "class-validator";
 import { PartialType } from "@nestjs/mapped-types";
 
 export class CreateHistoriaClinicaDto {
@@ -15,20 +15,24 @@ export class CreateHistoriaClinicaDto {
   fecha: string;
 
   @IsString()
+  @MaxLength(500)
   @IsNotEmpty()
   diagnostico: string;
 
   @IsString()
+  @MaxLength(500)
   @IsNotEmpty()
   tratamiento: string;
 
   @IsString()
+  @MaxLength(1000)
   @IsNotEmpty()
   observaciones: string;
 }
 
 export class UpdateHistoriaClinicaDto extends PartialType(CreateHistoriaClinicaDto) {
   @IsString()
+  @MaxLength(20)
   @IsOptional()
   codigoHistoria?: string;
 }
