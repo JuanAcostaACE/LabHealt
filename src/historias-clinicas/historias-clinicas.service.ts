@@ -27,7 +27,9 @@ export class HistoriasClinicasService {
   }
 
   findAll() {
-    return this.repo.find();
+    return this.repo.find({
+      relations: { paciente: true, doctor: true },
+    });
   }
 
   async findById(id: number) {

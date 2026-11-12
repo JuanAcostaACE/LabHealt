@@ -1,5 +1,6 @@
-import { IsDateString, IsInt, IsNotEmpty, IsOptional, IsString} from "class-validator";
+import { IsDateString, IsInt, IsNotEmpty, IsOptional, IsString } from "class-validator";
 import { PartialType } from "@nestjs/mapped-types";
+
 export class CreateHistoriaClinicaDto {
   @IsInt()
   @IsNotEmpty()
@@ -29,5 +30,5 @@ export class CreateHistoriaClinicaDto {
 export class UpdateHistoriaClinicaDto extends PartialType(CreateHistoriaClinicaDto) {
   @IsString()
   @IsOptional()
-  codigoHistoria: string;
+  codigoHistoria?: string;
 }
