@@ -11,16 +11,16 @@ export class HistoriaClinica {
   @Column({ type: 'int', name: 'paciente_id' })
   pacienteId: number;
 
-  @ManyToOne(() => Paciente, (paciente) => paciente.historias, { onDelete: 'RESTRICT' })
+  @ManyToOne(() => Paciente, (paciente) => paciente.histories, { onDelete: 'RESTRICT' })
   @JoinColumn({ name: 'paciente_id' })
   paciente: Relation<Paciente>;
 
   @Column({ type: 'int', name: 'doctor_id' })
   doctorId: number;
 
-  @ManyToOne(() => Doctor, { onDelete: 'RESTRICT' })
+  @ManyToOne(() => Doctor, (doctor) => doctor.histories, { onDelete: 'RESTRICT' })
   @JoinColumn({ name: 'doctor_id' })
-  doctor: Doctor;
+  doctor: Relation<Doctor>;
 
   @Column({ type: 'date' })
   fecha: string;
