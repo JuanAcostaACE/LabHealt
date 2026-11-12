@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { createObserveModule } from '@nestjs/observe';
 import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
+import { FrontendController } from './frontend.controller.js';
 import { PacientesModule } from './pacientes/pacientes.module.js';
 import { DoctoresModule } from './doctores/doctores.module.js';
 import { HistoriasClinicasModule } from './historias-clinicas/historias-clinicas.module.js';
@@ -40,7 +41,7 @@ export const { ObserveModule, ObserveInstrument } = createObserveModule();
     HistoriasClinicasModule,
     AlertaAnormalidadModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, FrontendController],
   providers: [AppService],
 })
 export class AppModule {}
