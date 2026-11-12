@@ -6,7 +6,7 @@ import { CreateDoctorDto } from '../doctores/doctor.dto.js';
 
 const pacienteBase = {
   nombre: 'Ana',
-  documento: '123',
+  documento: '1234567',
   email: 'ana@test.com',
   fechaNacimiento: '1995-04-12',
   tipoSangre: 'O+',

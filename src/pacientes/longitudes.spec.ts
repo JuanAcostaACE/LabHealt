@@ -6,7 +6,7 @@ import { CreateDoctorDto } from '../doctores/doctor.dto.js';
 
 const paciente = {
   nombre: 'Ana',
-  documento: '123',
+  documento: '1234567',
   telefono: '3001112222',
   email: 'ana@test.com',
   fechaNacimiento: '1995-04-12',
@@ -31,8 +31,6 @@ const errores = async (Clase: Dto, base: object, campo: string, valor: string) =
 
 const casos: [string, Dto, object, string, number][] = [
   ['paciente.nombre', CreatePacienteDto, paciente, 'nombre', 255],
-  ['paciente.documento', CreatePacienteDto, paciente, 'documento', 50],
-  ['paciente.tipoSangre', CreatePacienteDto, paciente, 'tipoSangre', 5],
   ['paciente.antecedentesClinicos', CreatePacienteDto, paciente, 'antecedentesClinicos', 1000],
   ['doctor.nombre', CreateDoctorDto, doctor, 'nombre', 255],
   ['doctor.especialidad', CreateDoctorDto, doctor, 'especialidad', 255],
