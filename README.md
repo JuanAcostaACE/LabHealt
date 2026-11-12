@@ -69,9 +69,6 @@ Base: `http://localhost:3000`
 | PUT | `/alerta-anormalidad/:id` | parcial |
 | DELETE | `/alerta-anormalidad/:id` | |
 
-> Los endpoints de relación no responden igual: `/pacientes/:id/historias` devuelve
-> `{ data, count }` y los otros dos un array pelado. Un cliente tiene que normalizarlo.
-
 ## Payloads
 
 ```jsonc
@@ -104,7 +101,7 @@ Base: `http://localhost:3000`
 - **400** · payload inválido, o `pacienteId` / `doctorId` / `historiaId` que no existen
 - **404** · el recurso pedido por `:id` no existe
 
-Los DTOs de update extienden `PartialType`, así que un `PUT` puede traer un solo campo.
+Los DTOs de actualización extienden `PartialType`: un `PUT` puede traer un solo campo.
 
 ## Instalación
 
@@ -125,8 +122,8 @@ npm run start:dev
 npm run start:prod
 ```
 
-CORS está habilitado (`app.enableCors()`) para que el frontend de Vite pegue directo
-desde `http://localhost:5173`.
+CORS está habilitado (`app.enableCors()`), de modo que un frontend servido en otro
+puerto —como el de Vite en `http://localhost:5173`— puede consumir la API directamente.
 
 ## Variables de entorno
 
