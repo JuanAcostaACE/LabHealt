@@ -1,13 +1,15 @@
-import { IsEnum, IsInt, IsNotEmpty, IsOptional, IsString, Length } from "class-validator";
+import { IsEnum, IsInt, IsNotEmpty, IsOptional, IsString, Length, MaxLength } from "class-validator";
 import { NivelAlerta } from './entities/alerta.entity.js';
 import { PartialType } from '@nestjs/mapped-types';
 
 export class CreateAlertaDto {
   @IsString()
+  @MaxLength(255)
   @IsNotEmpty()
   resultado: string;
 
   @IsString()
+  @MaxLength(500)
   @IsNotEmpty()
   mensaje: string;
 
