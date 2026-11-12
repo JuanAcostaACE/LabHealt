@@ -1,5 +1,5 @@
 import { PartialType } from "@nestjs/mapped-types";
-import { IsDateString, IsEmail, IsNotEmpty, IsOptional, IsString, Length } from "class-validator";
+import { IsDateString, IsEmail, IsNotEmpty, IsNumberString, IsOptional, IsString, Length } from "class-validator";
 
 export class CreatePacienteDto {
   @IsString()
@@ -10,7 +10,8 @@ export class CreatePacienteDto {
   @IsNotEmpty()
   documento: string;
 
-  @IsString()
+  @IsNumberString({ no_symbols: true }, { message: 'telefono debe contener solo números' })
+  @Length(7, 15, { message: 'telefono debe tener entre 7 y 15 dígitos' })
   @IsNotEmpty()
   telefono: string;
 
