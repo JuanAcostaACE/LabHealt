@@ -154,6 +154,19 @@ npm run start:prod
 CORS está habilitado (`app.enableCors()`), de modo que un frontend servido en otro
 puerto —como el de Vite en `http://localhost:5173`— puede consumir la API directamente.
 
+## Datos de ejemplo
+
+```bash
+npm run seed
+```
+
+Inserta 3 pacientes, 2 doctores, 3 historias clínicas y 3 alertas, ya relacionadas entre
+sí. No hace nada si ya hay pacientes en la base; para empezar de cero:
+
+```sql
+TRUNCATE TABLE alertas, historias_clinicas, pacientes, doctores RESTART IDENTITY CASCADE;
+```
+
 ## Variables de entorno
 
 ```bash
