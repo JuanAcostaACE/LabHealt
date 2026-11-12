@@ -1,19 +1,23 @@
-import { IsEmail, IsNotEmpty, IsNumberString, IsOptional, IsString, Length } from "class-validator";
+import { IsEmail, IsNotEmpty, IsNumberString, IsOptional, IsString, Length, MaxLength } from "class-validator";
 import {PartialType} from "@nestjs/mapped-types";
 export class CreateDoctorDto {
   @IsString()
+  @MaxLength(255)
   @IsNotEmpty()
   nombre: string;
 
   @IsString()
+  @MaxLength(255)
   @IsNotEmpty()
   especialidad: string;
 
   @IsString()
+  @MaxLength(50)
   @IsNotEmpty()
   licencia: string;
 
   @IsEmail()
+  @MaxLength(255)
   @IsNotEmpty()
   email: string;
 
