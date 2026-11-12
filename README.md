@@ -89,33 +89,33 @@ Base: `http://localhost:3000`
 { "resultado": "Hemoglobina 7", "mensaje": "Valor bajo", "nivel": "Alto", "historiaId": 1 }
 ```
 
-## Límites de los campos
+## Reglas de los campos
 
 | Entidad | Campo | Regla |
 |---|---|---|
-| Paciente | `nombre` | texto, máx. 255 |
-| Paciente | `documento` | texto, máx. 50, único |
+| Paciente | `nombre` | letras, espacios, apóstrofos, puntos y guiones; 3 a 255 |
+| Paciente | `documento` | solo dígitos, 5 a 20, único |
 | Paciente | `telefono` | solo dígitos, 7 a 15 |
-| Paciente | `email` | email, máx. 255 |
-| Paciente | `fechaNacimiento` | fecha `YYYY-MM-DD` |
-| Paciente | `tipoSangre` | texto, máx. 5 |
-| Paciente | `antecedentesClinicos` | texto, máx. 1000 |
-| Doctor | `nombre` | texto, máx. 255 |
-| Doctor | `especialidad` | texto, máx. 255 |
-| Doctor | `licencia` | texto, máx. 50, único |
-| Doctor | `email` | email, máx. 255 |
+| Paciente | `email` | email válido, máx. 255 |
+| Paciente | `fechaNacimiento` | fecha `YYYY-MM-DD`, no futura |
+| Paciente | `tipoSangre` | `A+`, `A-`, `B+`, `B-`, `AB+`, `AB-`, `O+` u `O-` |
+| Paciente | `antecedentesClinicos` | texto, 3 a 1000 |
+| Doctor | `nombre` | letras, espacios, apóstrofos, puntos y guiones; 3 a 255 |
+| Doctor | `especialidad` | mismas reglas que `nombre` |
+| Doctor | `licencia` | letras, números y guiones; 3 a 50, único |
+| Doctor | `email` | email válido, máx. 255 |
 | Doctor | `telefono` | solo dígitos, 7 a 15 |
-| Historia clínica | `pacienteId`, `doctorId` | entero, debe existir |
-| Historia clínica | `fecha` | fecha `YYYY-MM-DD` |
-| Historia clínica | `diagnostico` | texto, máx. 500 |
-| Historia clínica | `tratamiento` | texto, máx. 500 |
-| Historia clínica | `observaciones` | texto, máx. 1000 |
-| Alerta | `resultado` | texto, máx. 255 |
-| Alerta | `mensaje` | texto, máx. 500 |
+| Historia clínica | `pacienteId`, `doctorId` | entero positivo, debe existir |
+| Historia clínica | `fecha` | fecha `YYYY-MM-DD`, no futura |
+| Historia clínica | `diagnostico` | texto, 3 a 500 |
+| Historia clínica | `tratamiento` | texto, 3 a 500 |
+| Historia clínica | `observaciones` | texto, 3 a 1000 |
+| Alerta | `resultado` | texto, 3 a 255 |
+| Alerta | `mensaje` | texto, 3 a 500 |
 | Alerta | `nivel` | `Bajo`, `Medio` o `Alto` |
-| Alerta | `historiaId` | entero, debe existir |
+| Alerta | `historiaId` | entero positivo, debe existir |
 
-Todos los campos de creación son obligatorios. Los mismos límites aplican a los `PUT`,
+Todos los campos de creación son obligatorios. Las mismas reglas aplican a los `PUT`,
 porque los DTOs de actualización extienden `PartialType`.
 
 ## Validación y errores
