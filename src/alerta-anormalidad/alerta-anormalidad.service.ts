@@ -1,7 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Alerta } from './entities/alerta.entity.js';
+import { HistoriaClinica } from '../historias-clinicas/entities/historia-clinica.entity.js';
 import { CreateAlertaDto, UpdateAlertaDto } from './alerta.dto.js';
 
 @Injectable()
@@ -9,7 +10,15 @@ export class AlertaAnormalidadService {
   constructor(
     @InjectRepository(Alerta)
     private repo: Repository<Alerta>,
+    @InjectRepository(HistoriaClinica)
+    private historias: Repository<HistoriaClinica>,
   ) {}
+
+  private async assertHistoria(historiaId: number) {
+    if (!(await this.historias.existsBy({ id: historiaId }))) {
+      throw new BadRequestException(`Historia clínica con ID ${historiaId} no existe`);
+    }
+  }
 
   findAll() {
     return this.repo.find();
@@ -23,7 +32,8 @@ export class AlertaAnormalidadService {
     return alerta;
   }
 
-  create(alertaPayload: CreateAlertaDto) {
+  async create(alertaPayload: CreateAlertaDto) {
+    await this.assertHistoria(alertaPayload.historiaId);
     return this.repo.save(this.repo.create(alertaPayload));
   }
 
@@ -34,6 +44,7 @@ export class AlertaAnormalidadService {
 
   async update(id: number, alertaPayload: UpdateAlertaDto) {
     const alerta = await this.findById(id);
+    await this.assertHistoria(alertaPayload.historiaId ?? alerta.historiaId);
     return this.repo.save(Object.assign(alerta, alertaPayload));
   }
 }

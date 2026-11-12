@@ -1,7 +1,8 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import type { Relation } from 'typeorm';
 import { Paciente } from '../../pacientes/entities/paciente.entity.js';
 import { Doctor } from '../../doctores/entities/doctor.entity.js';
+import { Alerta } from '../../alerta-anormalidad/entities/alerta.entity.js';
 
 @Entity({ name: 'historias_clinicas' })
 export class HistoriaClinica {
@@ -42,4 +43,7 @@ export class HistoriaClinica {
 
   @UpdateDateColumn({ type: 'timestamp', name: 'updated_at' })
   updatedAt: Date;
+
+  @OneToMany(() => Alerta, (alerta) => alerta.historia)
+  alerts: Alerta[];
 }

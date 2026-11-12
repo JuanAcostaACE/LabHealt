@@ -1,5 +1,6 @@
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Alerta } from './entities/alerta.entity.js';
+import { HistoriaClinica } from '../historias-clinicas/entities/historia-clinica.entity.js';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AlertaAnormalidadService } from './alerta-anormalidad.service.js';
 
@@ -8,7 +9,7 @@ describe('AlertaAnormalidadService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [AlertaAnormalidadService, { provide: getRepositoryToken(Alerta), useValue: {} }],
+      providers: [AlertaAnormalidadService, { provide: getRepositoryToken(Alerta), useValue: {} }, { provide: getRepositoryToken(HistoriaClinica), useValue: {} }],
     }).compile();
 
     service = module.get<AlertaAnormalidadService>(AlertaAnormalidadService);

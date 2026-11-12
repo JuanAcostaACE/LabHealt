@@ -1,4 +1,6 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import type { Relation } from 'typeorm';
+import { HistoriaClinica } from '../../historias-clinicas/entities/historia-clinica.entity.js';
 
 export enum NivelAlerta {
   Bajo = 'Bajo',
@@ -28,4 +30,11 @@ export class Alerta {
 
   @UpdateDateColumn({ type: 'timestamp', name: 'updated_at' })
   updatedAt: Date;
+
+  @Column({ type: 'int', name: 'historia_id' })
+  historiaId: number;
+
+  @ManyToOne(() => HistoriaClinica, (historia) => historia.alerts, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'historia_id' })
+  historia: Relation<HistoriaClinica>;
 }
