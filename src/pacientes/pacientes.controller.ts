@@ -16,6 +16,11 @@ export class PacientesController {
     return this.pacientesService.findById(id);
   }
 
+  @Get(':id/historias')
+  getPatientHistories(@Param('id', ParseIntPipe) id: number) {
+    return this.pacientesService.findHistoriesById(id);
+  }
+
   @Get('search/:nombre')
   getPacienteByName(@Param('nombre') nombre: string) {
     return this.pacientesService.findByName(nombre);

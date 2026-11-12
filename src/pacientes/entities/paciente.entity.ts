@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { HistoriaClinica } from '../../historias-clinicas/entities/historia-clinica.entity.js';
 
 @Entity({ name: 'pacientes' })
 export class Paciente {
@@ -34,4 +35,7 @@ export class Paciente {
 
   @UpdateDateColumn({ type: 'timestamp', name: 'updated_at' })
   updatedAt: Date;
+
+  @OneToMany(() => HistoriaClinica, (historia) => historia.paciente)
+  histories: HistoriaClinica[];
 }

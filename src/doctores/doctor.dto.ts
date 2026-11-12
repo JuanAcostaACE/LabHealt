@@ -1,5 +1,5 @@
-import { IsEmail, IsNotEmpty, IsString, Length } from "class-validator";
-
+import { IsEmail, IsNotEmpty, IsOptional, IsString, Length } from "class-validator";
+import {PartialType} from "@nestjs/mapped-types";
 export class CreateDoctorDto {
   @IsString()
   @IsNotEmpty()
@@ -22,29 +22,9 @@ export class CreateDoctorDto {
   telefono: string;
 }
 
-export class UpdateDoctorDto {
+export class UpdateDoctorDto extends PartialType(CreateDoctorDto) {
   @IsString()
-  @IsNotEmpty()
-  nombre: string;
-
-  @IsString()
-  @IsNotEmpty()
-  especialidad: string;
-
-  @IsString()
-  @IsNotEmpty()
-  licencia: string;
-
-  @IsEmail()
-  @IsNotEmpty()
-  email: string;
-
-  @IsString()
-  @IsNotEmpty()
-  telefono: string;
-
-  @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   @Length(3, 8)
   codigoDoctor?: string;
 }

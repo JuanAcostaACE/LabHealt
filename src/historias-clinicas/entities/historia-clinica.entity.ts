@@ -1,4 +1,5 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import type { Relation } from 'typeorm';
 import { Paciente } from '../../pacientes/entities/paciente.entity.js';
 import { Doctor } from '../../doctores/entities/doctor.entity.js';
 
@@ -10,16 +11,16 @@ export class HistoriaClinica {
   @Column({ type: 'int', name: 'paciente_id' })
   pacienteId: number;
 
-  @ManyToOne(() => Paciente, { onDelete: 'RESTRICT' })
+  @ManyToOne(() => Paciente, (paciente) => paciente.histories, { onDelete: 'RESTRICT' })
   @JoinColumn({ name: 'paciente_id' })
-  paciente: Paciente;
+  paciente: Relation<Paciente>;
 
   @Column({ type: 'int', name: 'doctor_id' })
   doctorId: number;
 
-  @ManyToOne(() => Doctor, { onDelete: 'RESTRICT' })
+  @ManyToOne(() => Doctor, (doctor) => doctor.histories, { onDelete: 'RESTRICT' })
   @JoinColumn({ name: 'doctor_id' })
-  doctor: Doctor;
+  doctor: Relation<Doctor>;
 
   @Column({ type: 'date' })
   fecha: string;

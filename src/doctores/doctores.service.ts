@@ -59,4 +59,17 @@ export class DoctoresService {
       data: updated,
     };
   }
+
+  async findHistoriesById(id: number) {
+    const doctor = await this.repo.findOne({
+      where: { id },
+      relations: { histories: true }
+    });
+
+    if (!doctor) {
+      throw new NotFoundException(`Doctor con ID ${id} no existe`);
+    }
+
+    return doctor.histories;
+  }
 }
