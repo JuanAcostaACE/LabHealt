@@ -1,4 +1,5 @@
 import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import type { Relation } from 'typeorm';
 import { Paciente } from '../../pacientes/entities/paciente.entity.js';
 import { Doctor } from '../../doctores/entities/doctor.entity.js';
 
@@ -12,7 +13,7 @@ export class HistoriaClinica {
 
   @ManyToOne(() => Paciente, (paciente) => paciente.historias, { onDelete: 'RESTRICT' })
   @JoinColumn({ name: 'paciente_id' })
-  paciente: Paciente;
+  paciente: Relation<Paciente>;
 
   @Column({ type: 'int', name: 'doctor_id' })
   doctorId: number;
