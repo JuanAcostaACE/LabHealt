@@ -1,12 +1,11 @@
 import { PartialType } from "@nestjs/mapped-types";
-import { IsDateString, IsEmail, IsIn, IsNotEmpty, IsNumberString, IsOptional, IsString, Length, Matches, MaxLength, MinLength } from "class-validator";
+import { IsDateString, IsEmail, IsIn, IsNotEmpty, IsNumberString, IsOptional, IsString, Length, MaxLength, MinLength } from "class-validator";
 import { NoFutura } from "../common/no-futura.validator.js";
 
 export const TIPOS_DE_SANGRE = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'] as const;
 
 export class CreatePacienteDto {
   @IsString()
-  @Matches(/^[\p{L}\p{M} '.-]+$/u, { message: 'nombre solo puede tener letras, espacios, apóstrofos, puntos y guiones' })
   @MinLength(3)
   @MaxLength(255)
   @IsNotEmpty()
