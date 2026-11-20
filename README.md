@@ -93,16 +93,16 @@ Base: `http://localhost:3000`
 
 | Entidad | Campo | Regla |
 |---|---|---|
-| Paciente | `nombre` | letras, espacios, apóstrofos, puntos y guiones; 3 a 255 |
+| Paciente | `nombre` | texto, 3 a 255 |
 | Paciente | `documento` | solo dígitos, 5 a 20, único |
 | Paciente | `telefono` | solo dígitos, 7 a 15 |
 | Paciente | `email` | email válido, máx. 255 |
 | Paciente | `fechaNacimiento` | fecha `YYYY-MM-DD`, no futura |
 | Paciente | `tipoSangre` | `A+`, `A-`, `B+`, `B-`, `AB+`, `AB-`, `O+` u `O-` |
 | Paciente | `antecedentesClinicos` | texto, 3 a 1000 |
-| Doctor | `nombre` | letras, espacios, apóstrofos, puntos y guiones; 3 a 255 |
+| Doctor | `nombre` | texto, 3 a 255 |
 | Doctor | `especialidad` | mismas reglas que `nombre` |
-| Doctor | `licencia` | letras, números y guiones; 3 a 50, único |
+| Doctor | `licencia` | texto, 3 a 50, único |
 | Doctor | `email` | email válido, máx. 255 |
 | Doctor | `telefono` | solo dígitos, 7 a 15 |
 | Historia clínica | `pacienteId`, `doctorId` | entero positivo, debe existir |
