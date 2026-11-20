@@ -4,8 +4,6 @@ import { QueryFailedError } from 'typeorm';
 
 type ErrorPg = { code?: string; detail?: string };
 
-// Un unique violado (23505) o un borrado con hijos por RESTRICT (23503) salían como 500
-// "Internal server error" y el front solo puede mostrar lo que llega.
 @Catch(QueryFailedError)
 export class ErroresBdFilter extends BaseExceptionFilter {
   catch(error: QueryFailedError, host: ArgumentsHost) {
